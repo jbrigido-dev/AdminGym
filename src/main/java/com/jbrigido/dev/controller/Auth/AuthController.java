@@ -4,6 +4,7 @@ import com.jbrigido.dev.core.storage.local.LocalDB;
 import com.jbrigido.dev.dao.user.UserDB;
 import com.jbrigido.dev.dto.UserDTO;
 import com.jbrigido.dev.view.auth.Auth;
+import com.jbrigido.dev.view.main.MainView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,10 @@ public class AuthController {
 
     private void openMain() {
         view.dispose();
-        JOptionPane.showMessageDialog(null, "Connection established");
+        MainView mainView = new MainView();
+        mainView.setSize(new Dimension(1080, 720));
+        mainView.setLocationRelativeTo(null);
+        mainView.setVisible(true);
     }
 
 }
