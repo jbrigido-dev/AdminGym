@@ -8,19 +8,23 @@ import org.jdesktop.swingx.*;
 
 import javax.swing.*;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
 
-public class Auth extends JXPanel {
+public class Auth extends JXFrame {
     private AButton btnLogin;
     private ATextField txtUsername;
     private APasswordField txtpassword;
     private JXLabel lblicon;
+    private JXPanel pnlContent;
 
     public Auth() {
         initComponents();
         buildWindow();
+        pack();
     }
 
     private void initComponents() {
+        pnlContent = new JXPanel();
         lblicon = new JXLabel("LOGIN");
         btnLogin = new AButton("Auth");
         txtUsername = new ATextField("Insert your username", AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
@@ -28,14 +32,28 @@ public class Auth extends JXPanel {
     }
 
     private void buildWindow() {
-        setLayout(new GridLayout(4, 1, 50, 30));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        setBackground(AdminColor.WHITE);
-        add(lblicon);
+        pnlContent.setLayout(new GridLayout(4, 1, 50, 30));
+        pnlContent.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        pnlContent.setBackground(AdminColor.WHITE);
+        pnlContent.add(lblicon);
         lblicon.setHorizontalAlignment(SwingConstants.CENTER);
         lblicon.setForeground(AdminColor.PRIMARY);
-        add(txtUsername);
-        add(txtpassword);
-        add(btnLogin);
+        pnlContent.add(txtUsername);
+        pnlContent.add(txtpassword);
+        pnlContent.add(btnLogin);
+        add(pnlContent);
     }
+
+    public void addActionBtnLogin(ActionListener l) {
+        btnLogin.addActionListener(l);
+    }
+
+    public String getUsername() {
+        return txtUsername.getText();
+    }
+
+    public char[] getPassword() {
+        return txtpassword.getPassword();
+    }
+
 }
