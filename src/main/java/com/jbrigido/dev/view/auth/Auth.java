@@ -26,7 +26,7 @@ public class Auth extends JXFrame {
     private void initComponents() {
         pnlContent = new JXPanel();
         lblicon = new JXLabel("LOGIN");
-        btnLogin = new AButton("Auth");
+        btnLogin = new AButton("LOG IN");
         txtUsername = new ATextField("Insert your username", AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
         txtpassword = new APasswordField("Insert your Password", AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
     }

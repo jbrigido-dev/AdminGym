@@ -10,15 +10,16 @@ import org.kordamp.ikonli.materialdesign.MaterialDesign;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignM;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignT;
 import org.kordamp.ikonli.swing.FontIcon;
-
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class CustomerView extends JXPanel {
     private ASearcherField searcherField;
     private JXPanel bodyContainerPnl, headerContainerPnl, footerContainerPnl;
-    private AButton btnOK;
+    private AButton btnAdd;
     private JTable tblCustomers;
     private DefaultTableModel tblModel;
 
@@ -35,8 +36,8 @@ public class CustomerView extends JXPanel {
 
         this.searcherField = new ASearcherField("Search a customer");
         this.tblCustomers = new JTable();
-        this.btnOK = new AButton(FontIcon.of(MaterialDesign.MDI_PLUS, 32, AdminColor.WHITE));
-        this.btnOK.setPreferredSize(new Dimension(60,60));
+        this.btnAdd = new AButton(FontIcon.of(MaterialDesign.MDI_PLUS, 32, AdminColor.WHITE));
+        this.btnAdd.setPreferredSize(new Dimension(60, 60));
     }
 
     private void buildWindow() {
@@ -45,7 +46,7 @@ public class CustomerView extends JXPanel {
         headerContainerPnl.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         searcherField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         headerContainerPnl.add(searcherField);
-        headerContainerPnl.add(btnOK);
+        headerContainerPnl.add(btnAdd);
         add(headerContainerPnl, BorderLayout.NORTH);
         add(bodyContainerPnl, BorderLayout.CENTER);
         add(footerContainerPnl, BorderLayout.SOUTH);
@@ -103,6 +104,10 @@ public class CustomerView extends JXPanel {
         add(scrollPane);
     }
 
+    public void addListenerBtnAdd(ActionListener l) {
+        btnAdd.addActionListener(l);
+    }
+
     class CustomerButtonRender extends DefaultTableCellRenderer {
 
         private Icon icon;
@@ -130,11 +135,10 @@ public class CustomerView extends JXPanel {
                 if (action.equals("delete")) {
                     lblicon.setIcon(FontIcon.of(MaterialDesignT.TRASH_CAN, 32, AdminColor.PRIMARY));
                 }
-            }else {
+            } else {
                 cell.setBackground(AdminColor.WHITE);
             }
             return cell;
         }
     }
-
 }

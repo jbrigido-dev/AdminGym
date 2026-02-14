@@ -12,22 +12,22 @@ public class ATextField extends JXTextField {
 
     public ATextField() {
         setOpaque(false);
-        setBorder(BorderFactory.createEmptyBorder(0,10,0,10));
+        setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
     }
 
     public ATextField(String promptText) {
         super(promptText);
         setOpaque(false);
         setForeground(AdminColor.PRIMARY);
-        setBorder(BorderFactory.createEmptyBorder(0,10,0,10));
+        setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
     }
 
-    public ATextField(Color bgColor,Color promptForeground) {
+    public ATextField(Color promptForeground, Color bgColor) {
         super("", promptForeground);
         this.bgColor = bgColor;
         setOpaque(false);
         setForeground(AdminColor.PRIMARY);
-        setBorder(BorderFactory.createEmptyBorder(0,10,0,10));
+        setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
     }
 
     public ATextField(String promptText, Color promptForeground, Color bgColor) {
@@ -49,12 +49,12 @@ public class ATextField extends JXTextField {
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        if (bgColor == null){
+        if (bgColor == null) {
             g2.setPaint(AdminColor.WHITE);
-        }else {
+        } else {
             g2.setPaint(bgColor);
         }
-        g2.fillRoundRect(0,0, getWidth(),getHeight(),10,10);
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
         super.paintComponent(g);
     }
 }

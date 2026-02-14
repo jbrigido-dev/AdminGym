@@ -18,7 +18,7 @@ public class UserDB implements UserDAO {
 
     @Override
     public UserDTO getUser(String username, String password) {
-        String query = "Select name, last_name, username from users where username = (?) and password =(?)";
+        String query = "Select username, password from users where username = (?) and password =(?)";
         UserDTO found = null;
         connection = LocalDB.getInstance();
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -27,9 +27,10 @@ public class UserDB implements UserDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 found = new UserDTO(
-                        rs.getString(1),
-                        rs.getString(2),
-                        rs.getString(3)
+                        null
+                        , null
+                        , rs.getString(1)
+                        , rs.getString(2)
                 );
             }
 
