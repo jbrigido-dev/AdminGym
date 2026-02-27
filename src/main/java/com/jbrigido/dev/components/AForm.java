@@ -1,10 +1,16 @@
 package com.jbrigido.dev.components;
 
+import com.jbrigido.dev.dto.CustomerDTO;
 import com.jbrigido.dev.utilities.AdminColor;
+import com.toedter.calendar.JDateChooser;
 import org.jdesktop.swingx.JXImagePanel;
 import org.jdesktop.swingx.JXPanel;
+import org.jdesktop.swingx.JXTextField;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 public class AForm extends JXPanel {
     private ATextField txtCustomerID;
@@ -14,19 +20,18 @@ public class AForm extends JXPanel {
     private ATextField txtCustomerPhone;
     private ATextField txtCustomerEmail;
     private ATextField txtCustomerAddress;
-    private ATextField txtCustomerBirthday;
-    private AButton btnSave;
+    private JDateChooser txtCustomerBirthday;
     private JXImagePanel picture;
 
     public AForm() {
-        this.txtCustomerID = new ATextField("ID Customer",AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
-        this.txtCustomerName = new ATextField("Insert your name",AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
-        this.txtCustomerLastName = new ATextField("Insert your last name",AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
-        this.txtCustomerMotherLastName = new ATextField("Insert your mother Last Name (Optional)",AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
-        this.txtCustomerPhone = new ATextField("Insert your number phone",AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
-        this.txtCustomerEmail = new ATextField("Insert your email",AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
-        this.txtCustomerAddress = new ATextField("Insert your address",AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
-        this.txtCustomerBirthday = new ATextField("Insert your Birthday",AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
+        this.txtCustomerID = new ATextField("ID Customer", AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
+        this.txtCustomerName = new ATextField("Insert your name", AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
+        this.txtCustomerLastName = new ATextField("Insert your last name", AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
+        this.txtCustomerMotherLastName = new ATextField("Insert your mother Last Name (Optional)", AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
+        this.txtCustomerPhone = new ATextField("Insert your number phone", AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
+        this.txtCustomerEmail = new ATextField("Insert your email", AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
+        this.txtCustomerAddress = new ATextField("Insert your address", AdminColor.PRIMARY, AdminColor.TRANSPARENT_10);
+        this.txtCustomerBirthday = new JDateChooser();
         this.picture = new JXImagePanel();
         this.setBackground(AdminColor.WHITE);
         buildCustomerDataPanel();
@@ -80,6 +85,7 @@ public class AForm extends JXPanel {
         txtCustomerEmail.setPreferredSize(fieldSize);
         txtCustomerAddress.setPreferredSize(fieldSize);
         txtCustomerPhone.setPreferredSize(fieldSize);
+        alignCenter();
     }
 
     public String getTextCustomerID() {
@@ -110,12 +116,35 @@ public class AForm extends JXPanel {
         return txtCustomerAddress.getText();
     }
 
-    public String getTextCustomerBirthday() {
-        return txtCustomerBirthday.getText();
+   /* public String getTextCustomerBirthday() {
+        String patter = "MM-dd-YYYY";
+        return  new SimpleDateFormat(patter).format(txtCustomerBirthday.getDate());
+    }*/
+
+    public Date getTextCustomerBirthday() {
+        return txtCustomerBirthday.getDate();
     }
 
-    public void addActionBtnSave(ActionListener l) {
-        btnSave.addActionListener(l);
+    public void setCustomerData(CustomerDTO customer) {
+        txtCustomerID.setText(String.valueOf(customer.id()));
+        txtCustomerName.setText(customer.name());
+        txtCustomerLastName.setText(customer.lastName());
+        txtCustomerMotherLastName.setText(customer.motherName());
+        txtCustomerPhone.setText(customer.phoneNumber());
+        txtCustomerEmail.setText(customer.email());
+        txtCustomerAddress.setText(customer.address());
+        txtCustomerBirthday.setDate(customer.birthday());
     }
+
+
+    private void alignCenter() {
+        JXTextField components[] = {txtCustomerID, txtCustomerName, txtCustomerLastName, txtCustomerMotherLastName,
+                txtCustomerPhone, txtCustomerEmail, txtCustomerAddress
+        };
+        for (JXTextField component : components){
+            component.setHorizontalAlignment(SwingConstants.CENTER);
+        }
+    }
+
 
 }

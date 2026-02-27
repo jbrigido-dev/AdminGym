@@ -18,9 +18,6 @@ public class AuthController {
     public AuthController() {
         view = new Auth();
         addEvents();
-        view.setSize(new Dimension(500, 350));
-        view.setLocationRelativeTo(null);
-        view.setVisible(true);
     }
 
     public void addEvents() {
@@ -54,9 +51,6 @@ public class AuthController {
     private void openMain() {
         view.dispose();
         MainView mainView = new MainView();
-        mainView.setSize(new Dimension(1080, 720));
-        mainView.setLocationRelativeTo(null);
         mainView.setVisible(true);
     }
-
 }

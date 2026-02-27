@@ -2,18 +2,23 @@ package com.jbrigido.dev.view.customer;
 
 import com.jbrigido.dev.components.AButton;
 import com.jbrigido.dev.components.ASearcherField;
+import com.jbrigido.dev.dto.CustomerDTO;
 import com.jbrigido.dev.utilities.AdminColor;
+import com.jbrigido.dev.utilities.TableConstants;
+import org.jdesktop.swingx.JXButton;
 import org.jdesktop.swingx.JXLabel;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.renderer.DefaultTableRenderer;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignM;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignT;
 import org.kordamp.ikonli.swing.FontIcon;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CustomerView extends JXPanel {
@@ -22,6 +27,7 @@ public class CustomerView extends JXPanel {
     private AButton btnAdd;
     private JTable tblCustomers;
     private DefaultTableModel tblModel;
+    private CustomerTableListener listenerTbl;
 
     public CustomerView() {
         initComponents();
@@ -61,10 +67,9 @@ public class CustomerView extends JXPanel {
     }
 
     private void buildHeaderTable() {
-        String[] headers = {"ID", "Name", "Number Phone", "Status", "Details", "Remove"};
+        String[] headers = {"ID", "Name", "Phone Number", "Status", "Details", "Remove"};
         tblCustomers.getTableHeader().setDefaultRenderer(
                 new DefaultTableRenderer() {
-
                     @Override
                     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                         JXPanel identifier = new JXPanel();
@@ -80,8 +85,6 @@ public class CustomerView extends JXPanel {
         );
         tblModel = new DefaultTableModel();
         tblModel.setColumnIdentifiers(headers);
-        tblModel.addRow(new Object[]{"1", "Jonathan Brigido Perez", "7732606656", "Active"});
-        tblModel.addRow(new Object[]{"2", "Jonathan Brigido Perez", "7732606656", "Active"});
     }
 
     private void buildTable() {
@@ -91,12 +94,7 @@ public class CustomerView extends JXPanel {
         scrollPane.getViewport().setBackground(AdminColor.WHITE);
         scrollPane.setBackground(AdminColor.WHITE);
         tblCustomers.setModel(tblModel);
-        tblCustomers.getColumn("ID").setCellRenderer(new CustomerButtonRender(null, "text"));
-        tblCustomers.getColumn("Name").setCellRenderer(new CustomerButtonRender(null, "text"));
-        tblCustomers.getColumn("Number Phone").setCellRenderer(new CustomerButtonRender(null, "text"));
-        tblCustomers.getColumn("Status").setCellRenderer(new CustomerButtonRender(null, "text"));
-        tblCustomers.getColumn("Details").setCellRenderer(new CustomerButtonRender(FontIcon.of(MaterialDesignM.MAGNIFY, 32, AdminColor.PRIMARY), "show"));
-        tblCustomers.getColumn("Remove").setCellRenderer(new CustomerButtonRender(FontIcon.of(MaterialDesignT.TRASH_CAN, 32, AdminColor.PRIMARY), "delete"));
+        setRenders();
         tblCustomers.setShowGrid(false);
         tblCustomers.setRowHeight(40);
         tblCustomers.setIntercellSpacing(new Dimension(0, 0));
@@ -104,41 +102,137 @@ public class CustomerView extends JXPanel {
         add(scrollPane);
     }
 
+    private void setRenders() {
+        tblCustomers.getColumn("ID").setCellRenderer(new CustomerButtonRender(TableConstants.TEXT));
+        tblCustomers.getColumn("Name").setCellRenderer(new CustomerButtonRender(TableConstants.TEXT));
+        tblCustomers.getColumn("Phone Number").setCellRenderer(new CustomerButtonRender(TableConstants.TEXT));
+        tblCustomers.getColumn("Status").setCellRenderer(new CustomerButtonRender(TableConstants.TEXT));
+        tblCustomers.getColumn("Details").setCellRenderer(new CustomerButtonRender(TableConstants.SHOW));
+        tblCustomers.getColumn("Details").setCellEditor(new CustomerButtonEditor(TableConstants.SHOW));
+        tblCustomers.getColumn("Remove").setCellRenderer(new CustomerButtonRender(TableConstants.DELETE));
+        tblCustomers.getColumn("Remove").setCellEditor(new CustomerButtonEditor(TableConstants.DELETE));
+    }
+
     public void addListenerBtnAdd(ActionListener l) {
         btnAdd.addActionListener(l);
     }
 
+    public void addData(CustomerDTO customer) {
+        tblModel.addRow(new Object[]{
+                customer.id(),
+                customer.name() + " " + customer.lastName() + " " + customer.motherName(),
+                customer.phoneNumber(),
+                customer.status() ? "Active" : "Inactive",
+                "",
+                ""
+        });
+    }
+
+    public long getCustomerIDat(int row) {
+        return (long) tblCustomers.getValueAt(row, 0);
+    }
+
+    public int getRowNumber() {
+        return tblCustomers.getSelectedRow();
+    }
+
+    public void deleteRow(int row) {
+        tblModel.removeRow(row);
+    }
+
+    public void setListenerTbl(CustomerTableListener listenerTbl) {
+        this.listenerTbl = listenerTbl;
+    }
+
+    public interface CustomerTableListener {
+        void onShow(int row);
+
+        void onDelete(int row);
+    }
+
+
     class CustomerButtonRender extends DefaultTableCellRenderer {
 
-        private Icon icon;
         private String action;
 
-        public CustomerButtonRender(Icon icon, String action) {
-            this.icon = icon;
+        public CustomerButtonRender(String action) {
             this.action = action;
         }
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JXPanel cell = new JXPanel();
-            cell.setLayout(new BorderLayout());
-            cell.setOpaque(true);
-            JXLabel lblicon = new JXLabel(icon);
-            lblicon.setForeground(AdminColor.PRIMARY);
-            lblicon.setText(value == null ? "" : value.toString());
-            cell.add(lblicon);
+            JXLabel text = new JXLabel();
+            text.setHorizontalAlignment(SwingConstants.CENTER);
+
+            if (action.equals(TableConstants.TEXT)) {
+                text.setText((value == null) ? "" : value.toString());
+            }
+
             if (isSelected) {
-                cell.setBackground(AdminColor.PRIMARY_60);
-                if (action.equals("show")) {
-                    lblicon.setIcon(FontIcon.of(MaterialDesignM.MAGNIFY, 32, AdminColor.PRIMARY));
+                text.setForeground(AdminColor.TRANSPARENT_100);
+                if (action.equals(TableConstants.DELETE)) {
+                    text.setIcon(FontIcon.of(MaterialDesignT.TRASH_CAN, 32, AdminColor.TRANSPARENT_100));
                 }
-                if (action.equals("delete")) {
-                    lblicon.setIcon(FontIcon.of(MaterialDesignT.TRASH_CAN, 32, AdminColor.PRIMARY));
+                if (action.equals(TableConstants.SHOW)) {
+                    text.setIcon(FontIcon.of(MaterialDesign.MDI_MAGNIFY, 32, AdminColor.TRANSPARENT_100));
                 }
             } else {
-                cell.setBackground(AdminColor.WHITE);
+                text.setForeground(AdminColor.PRIMARY);
+                if (action.equals(TableConstants.DELETE)) {
+                    text.setIcon(FontIcon.of(MaterialDesignT.TRASH_CAN, 32, AdminColor.PRIMARY));
+                }
+                if (action.equals(TableConstants.SHOW)) {
+                    text.setIcon(FontIcon.of(MaterialDesign.MDI_MAGNIFY, 32, AdminColor.PRIMARY));
+                }
             }
-            return cell;
+            return text;
+        }
+    }
+
+    class CustomerButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
+
+        private String action;
+        private JXButton command;
+        private int currentRow;
+
+        public CustomerButtonEditor(String action) {
+            this.action = action;
+            command = new JXButton();
+            command.setActionCommand(action);
+            command.addActionListener(this);
+            command.setBorderPainted(false);
+            command.setContentAreaFilled(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            fireEditingStopped();
+            if (listenerTbl != null) {
+                if (TableConstants.SHOW.equals(e.getActionCommand())) {
+                    listenerTbl.onShow(currentRow);
+                }
+                if (TableConstants.DELETE.equals(e.getActionCommand())) {
+                    listenerTbl.onDelete(currentRow);
+                }
+            }
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            currentRow = row;
+            if (action.equals(TableConstants.SHOW)) {
+                command.setIcon(FontIcon.of(MaterialDesign.MDI_MAGNIFY, 32, AdminColor.PRIMARY));
+            }
+            if (action.equals(TableConstants.DELETE)) {
+                command.setIcon(FontIcon.of(MaterialDesignT.TRASH_CAN, 32, AdminColor.PRIMARY));
+            }
+            return command;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return null;
         }
     }
 }

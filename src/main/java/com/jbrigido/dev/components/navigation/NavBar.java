@@ -12,6 +12,8 @@ import java.awt.*;
 
 public class NavBar extends JXPanel {
 
+    private NavItem dashboardItem, customerItem, attendanceItem, transactionItem, cashRegisterItem, inventoryItem, usersItem;
+
     public NavBar() {
         buildWindow();
         initComponents();
@@ -21,25 +23,25 @@ public class NavBar extends JXPanel {
         this.setBackground(AdminColor.WHITE);
         FontIcon icon = FontIcon.of(MaterialDesign.MDI_HOME, 32, AdminColor.PRIMARY);
         ItemModel dashboard = new ItemModel("DASHBOARD", icon, ItemModel.ItemType.MENU);
-        NavItem dashboardItem = new NavItem(dashboard, false);
+        dashboardItem = new NavItem(dashboard, false);
         icon = FontIcon.of(MaterialDesign.MDI_CASH_USD, 32, AdminColor.PRIMARY);
         ItemModel customer = new ItemModel("CUSTOMERS", icon, ItemModel.ItemType.MENU);
-        NavItem customerItem = new NavItem(customer, false);
+        customerItem = new NavItem(customer, false);
         icon = FontIcon.of(MaterialDesign.MDI_HISTORY, 32, AdminColor.PRIMARY);
         ItemModel attendance = new ItemModel("ATTENDANCE", icon, ItemModel.ItemType.MENU);
-        NavItem attendanceItem = new NavItem(attendance, false);
+        attendanceItem = new NavItem(attendance, false);
         icon = FontIcon.of(MaterialDesign.MDI_CASH, 32, AdminColor.PRIMARY);
         ItemModel transaction = new ItemModel("TRANSACTIONS", icon, ItemModel.ItemType.MENU);
-        NavItem transactionItem = new NavItem(transaction, false);
+        transactionItem = new NavItem(transaction, false);
         icon = FontIcon.of(MaterialDesign.MDI_ACCOUNT_CHECK, 32, AdminColor.PRIMARY);
         ItemModel cashRegister = new ItemModel("CASH REGISTER", icon, ItemModel.ItemType.MENU);
-        NavItem cashRegisterItem = new NavItem(cashRegister, false);
+        cashRegisterItem = new NavItem(cashRegister, false);
         icon = FontIcon.of(MaterialDesign.MDI_ACCOUNT_SEARCH, 32, AdminColor.PRIMARY);
         ItemModel inventory = new ItemModel("INVENTORY", icon, ItemModel.ItemType.MENU);
-        NavItem inventoryItem = new NavItem(inventory, false);
+        inventoryItem = new NavItem(inventory, false);
         icon = FontIcon.of(MaterialDesign.MDI_ACCOUNT_SWITCH, 32, AdminColor.PRIMARY);
         ItemModel users = new ItemModel("USERS", icon, ItemModel.ItemType.MENU);
-        NavItem usersItem = new NavItem(users, false);
+        usersItem = new NavItem(users, false);
         JXPanel separatorTop = new JXPanel();
         separatorTop.setBorder(BorderFactory.createEmptyBorder(60, 0, 60, 0));
         separatorTop.setBackground(AdminColor.WHITE);
@@ -57,6 +59,34 @@ public class NavBar extends JXPanel {
         add(separatorBottom);
         repaint();
         revalidate();
+    }
+
+    public NavItem getDashboardItem() {
+        return dashboardItem;
+    }
+
+    public NavItem getCustomerItem() {
+        return customerItem;
+    }
+
+    public NavItem getAttendanceItem() {
+        return attendanceItem;
+    }
+
+    public NavItem getTransactionItem() {
+        return transactionItem;
+    }
+
+    public NavItem getCashRegisterItem() {
+        return cashRegisterItem;
+    }
+
+    public NavItem getInventoryItem() {
+        return inventoryItem;
+    }
+
+    public NavItem getUsersItem() {
+        return usersItem;
     }
 
     private void buildWindow() {

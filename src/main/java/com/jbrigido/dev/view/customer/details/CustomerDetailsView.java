@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class CustomerDetailsView extends JXFrame {
 
@@ -42,7 +43,7 @@ public class CustomerDetailsView extends JXFrame {
         this.customerFooterHistoryPanel = new JXPanel();
         this.btnSave = new AButton("Save", FontIcon.of(MaterialDesignP.PLUS, 32, AdminColor.WHITE));
         this.form = new AForm();
-        this.lblHistory = new JXLabel("Jonathan's History");
+        this.lblHistory = new JXLabel();
         this.tblCustomers = new JXTable();
     }
 
@@ -86,10 +87,11 @@ public class CustomerDetailsView extends JXFrame {
         tblModel.setColumnIdentifiers(headers);
         tblModel.addRow(new Object[]{"1", "30-01-2026", "30-01-2026", "Active"});
         tblModel.addRow(new Object[]{"2", "30-01-2026", "30-01-2026", "Active"});
-
-
     }
 
+    public AForm getForm() {
+        return form;
+    }
 
     private void buildTable() {
         buildHeaderTable();
@@ -106,7 +108,7 @@ public class CustomerDetailsView extends JXFrame {
     }
 
     private void changeBackground() {
-        Component[] components = {form,pnlContainer, pnlContainerMain, customerDataPanel, customerDataContainer, customerDataPanel, picture, customerHistoryPanel, customerFooterHistoryPanel, customerHeaderHistoryPanel};
+        Component[] components = {form, pnlContainer, pnlContainerMain, customerDataPanel, customerDataContainer, customerDataPanel, picture, customerHistoryPanel, customerFooterHistoryPanel, customerHeaderHistoryPanel};
         for (Component component : components) {
             component.setBackground(AdminColor.WHITE);
         }
@@ -144,5 +146,13 @@ public class CustomerDetailsView extends JXFrame {
             }
             return cell;
         }
+    }
+
+    public void setTextToLblHistory(String text) {
+        lblHistory.setText(text + "'s History");
+    }
+
+    public void addEventSave(ActionListener a) {
+        btnSave.addActionListener(a);
     }
 }

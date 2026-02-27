@@ -10,6 +10,7 @@ import org.kordamp.ikonli.swing.FontIcon;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class CustomerAddView extends JXFrame {
 
@@ -39,6 +40,13 @@ public class CustomerAddView extends JXFrame {
         add(pnlContainer);
         repaint();
         pack();
+    }
 
+    public void addEventSave(ActionListener a) {
+        btnSave.addActionListener(a);
+    }
+
+    public AForm getForm() {
+        return form;
     }
 }
