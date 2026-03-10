@@ -27,7 +27,7 @@ public class CustomerView extends JXPanel {
     private AButton btnAdd;
     private JTable tblCustomers;
     private DefaultTableModel tblModel;
-    private CustomerTableListener listenerTbl;
+    private CustomerTableListener tableListener;
 
     public CustomerView() {
         initComponents();
@@ -39,7 +39,6 @@ public class CustomerView extends JXPanel {
         this.headerContainerPnl = new JXPanel();
         this.bodyContainerPnl = new JXPanel();
         this.footerContainerPnl = new JXPanel();
-
         this.searcherField = new ASearcherField("Search a customer");
         this.tblCustomers = new JTable();
         this.btnAdd = new AButton(FontIcon.of(MaterialDesign.MDI_PLUS, 32, AdminColor.WHITE));
@@ -136,12 +135,20 @@ public class CustomerView extends JXPanel {
         return tblCustomers.getSelectedRow();
     }
 
+    public void resetTable() {
+        tblModel.setRowCount(0);
+    }
+
     public void deleteRow(int row) {
         tblModel.removeRow(row);
     }
 
-    public void setListenerTbl(CustomerTableListener listenerTbl) {
-        this.listenerTbl = listenerTbl;
+    public void setTableListener(CustomerTableListener tableListener) {
+        this.tableListener = tableListener;
+    }
+
+    public void setFindAction(ActionListener actionListener) {
+        this.searcherField.addActionListener(actionListener);
     }
 
     public interface CustomerTableListener {
@@ -150,6 +157,9 @@ public class CustomerView extends JXPanel {
         void onDelete(int row);
     }
 
+    public String getTextSearchField() {
+        return this.searcherField.getText();
+    }
 
     class CustomerButtonRender extends DefaultTableCellRenderer {
 
@@ -208,12 +218,12 @@ public class CustomerView extends JXPanel {
         public void actionPerformed(ActionEvent e) {
 
             fireEditingStopped();
-            if (listenerTbl != null) {
+            if (tableListener != null) {
                 if (TableConstants.SHOW.equals(e.getActionCommand())) {
-                    listenerTbl.onShow(currentRow);
+                    tableListener.onShow(currentRow);
                 }
                 if (TableConstants.DELETE.equals(e.getActionCommand())) {
-                    listenerTbl.onDelete(currentRow);
+                    tableListener.onDelete(currentRow);
                 }
             }
         }

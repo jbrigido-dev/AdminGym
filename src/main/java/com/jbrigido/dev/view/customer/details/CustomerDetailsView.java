@@ -2,9 +2,11 @@ package com.jbrigido.dev.view.customer.details;
 
 import com.jbrigido.dev.components.AButton;
 import com.jbrigido.dev.components.AForm;
+import com.jbrigido.dev.dto.MembershipDTO;
 import com.jbrigido.dev.utilities.AdminColor;
 import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.renderer.DefaultTableRenderer;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignP;
 import org.kordamp.ikonli.swing.FontIcon;
 
@@ -13,6 +15,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class CustomerDetailsView extends JXFrame {
 
@@ -20,6 +23,7 @@ public class CustomerDetailsView extends JXFrame {
     private JXPanel customerDataContainer, customerDataPanel, pnlContainer, pnlContainerMain;
     private JXPanel customerHistoryPanel, customerHeaderHistoryPanel, customerFooterHistoryPanel;
     private AButton btnSave;
+    private AButton bntPay;
     private JTable tblCustomers;
     private JXLabel lblHistory;
     private DefaultTableModel tblModel;
@@ -29,6 +33,7 @@ public class CustomerDetailsView extends JXFrame {
         initComponents();
         buildWindow();
         buildTable();
+        pack();
     }
 
 
@@ -42,6 +47,7 @@ public class CustomerDetailsView extends JXFrame {
         this.customerHeaderHistoryPanel = new JXPanel();
         this.customerFooterHistoryPanel = new JXPanel();
         this.btnSave = new AButton("Save", FontIcon.of(MaterialDesignP.PLUS, 32, AdminColor.WHITE));
+        this.bntPay = new AButton("Pay", FontIcon.of(MaterialDesignC.CASH, 32, AdminColor.WHITE));
         this.form = new AForm();
         this.lblHistory = new JXLabel();
         this.tblCustomers = new JXTable();
@@ -85,8 +91,10 @@ public class CustomerDetailsView extends JXFrame {
 
         tblModel = new DefaultTableModel();
         tblModel.setColumnIdentifiers(headers);
-        tblModel.addRow(new Object[]{"1", "30-01-2026", "30-01-2026", "Active"});
-        tblModel.addRow(new Object[]{"2", "30-01-2026", "30-01-2026", "Active"});
+    }
+
+    public void setItem(MembershipDTO item) {
+        tblModel.addRow(new Object[]{item.id(), item.startDate(), item.endDate(), item.status() ? "Active" : "Inactive"});
     }
 
     public AForm getForm() {
@@ -122,8 +130,10 @@ public class CustomerDetailsView extends JXFrame {
     }
 
     private void buildFooterHistoryPanel() {
-        customerFooterHistoryPanel.setLayout(new BorderLayout());
-        customerFooterHistoryPanel.add(btnSave, BorderLayout.WEST);
+        customerFooterHistoryPanel.setLayout(new FlowLayout());
+        customerFooterHistoryPanel.add(btnSave);
+        customerFooterHistoryPanel.add(bntPay);
+
         customerFooterHistoryPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
@@ -154,5 +164,9 @@ public class CustomerDetailsView extends JXFrame {
 
     public void addEventSave(ActionListener a) {
         btnSave.addActionListener(a);
+    }
+
+    public void addEventPay(ActionListener a) {
+        bntPay.addActionListener(a);
     }
 }

@@ -9,7 +9,7 @@ import org.jdesktop.swingx.JXTextField;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class AForm extends JXPanel {
@@ -116,10 +116,6 @@ public class AForm extends JXPanel {
         return txtCustomerAddress.getText();
     }
 
-   /* public String getTextCustomerBirthday() {
-        String patter = "MM-dd-YYYY";
-        return  new SimpleDateFormat(patter).format(txtCustomerBirthday.getDate());
-    }*/
 
     public Date getTextCustomerBirthday() {
         return txtCustomerBirthday.getDate();
@@ -133,7 +129,7 @@ public class AForm extends JXPanel {
         txtCustomerPhone.setText(customer.phoneNumber());
         txtCustomerEmail.setText(customer.email());
         txtCustomerAddress.setText(customer.address());
-        txtCustomerBirthday.setDate(customer.birthday());
+        txtCustomerBirthday.setDate(java.sql.Date.valueOf(customer.birthday()));
     }
 
 
@@ -141,7 +137,7 @@ public class AForm extends JXPanel {
         JXTextField components[] = {txtCustomerID, txtCustomerName, txtCustomerLastName, txtCustomerMotherLastName,
                 txtCustomerPhone, txtCustomerEmail, txtCustomerAddress
         };
-        for (JXTextField component : components){
+        for (JXTextField component : components) {
             component.setHorizontalAlignment(SwingConstants.CENTER);
         }
     }

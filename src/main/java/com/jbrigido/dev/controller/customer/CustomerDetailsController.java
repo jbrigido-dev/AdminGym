@@ -1,36 +1,48 @@
 package com.jbrigido.dev.controller.customer;
 
 import com.jbrigido.dev.core.storage.local.LocalDB;
-import com.jbrigido.dev.dao.customer.CustomerDB;
+import com.jbrigido.dev.dao.Membership.MembershipDB;
 import com.jbrigido.dev.dto.CustomerDTO;
+import com.jbrigido.dev.dto.MembershipDTO;
+import com.jbrigido.dev.services.CustomerService;
 import com.jbrigido.dev.view.customer.details.CustomerDetailsView;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
 
 public class CustomerDetailsController {
 
     private CustomerDetailsView view;
     private CustomerDTO model;
+    private CustomerService service;
 
     public CustomerDetailsController(CustomerDTO model) {
         this.model = model;
         this.view = new CustomerDetailsView();
-        view.pack();
+        setInformation();
+        setEvents();
         view.setSize(new Dimension(1080, 720));
         view.setLocationRelativeTo(null);
         view.setVisible(true);
+
+    }
+
+    private void setInformation() {
+        view.getForm().setCustomerData(model);
+        view.setTextToLblHistory(model.name());
         loadData();
-        setEvents();
     }
 
     private void loadData() {
-        view.getForm().setCustomerData(model);
-        view.setTextToLblHistory(model.name());
-
+        List<MembershipDTO> list = new MembershipDB(LocalDB.getInstance()).allById(model.id());
+        for (MembershipDTO dto : list) {
+            view.setItem(dto);
+        }
     }
 
     private void setEvents() {
@@ -43,18 +55,25 @@ public class CustomerDetailsController {
                 }
             }
         });
+        view.addEventPay(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CustomerPaymentController controller = new CustomerPaymentController(model);
+            }
+        });
     }
 
     private void updateCustomer() {
+
+        service = new CustomerService(LocalDB.getInstance());
         long id = Long.parseLong(view.getForm().getTextCustomerID());
         String name = view.getForm().getTextCustomerName();
         String lastname = view.getForm().getTextCustomerLastName();
         String motherlastname = view.getForm().getTextCustomerMotherLastName();
-        Date date = view.getForm().getTextCustomerBirthday();
+        LocalDate date = view.getForm().getTextCustomerBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String address = view.getForm().getTextCustomerAddress();
         String phone = view.getForm().getTextCustomerPhone();
         String email = view.getForm().getTextCustomerEmail();
-
 
         if (isEmpty(name, lastname)) {
             JOptionPane.showMessageDialog(null, "Field required");
@@ -77,12 +96,8 @@ public class CustomerDetailsController {
             JOptionPane.showMessageDialog(null, "Enter a valid email");
             return;
         }
-
-
         CustomerDTO request = new CustomerDTO(id, name, lastname, motherlastname, phone, email, date, address, true);
-
-        new CustomerDB(LocalDB.getInstance()).update(request);
-
+        service.update(request);
         JOptionPane.showMessageDialog(null, "Customer Updated");
 
     }

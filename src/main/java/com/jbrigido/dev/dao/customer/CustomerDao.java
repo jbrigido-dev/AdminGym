@@ -11,6 +11,8 @@ public interface CustomerDao {
 
     List<CustomerDTO> all();
 
+    List<CustomerDTO> getByName(String name);
+
     Optional<CustomerDTO> getById(long id);
 
     void delete(long id);

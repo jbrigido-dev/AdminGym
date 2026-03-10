@@ -3,6 +3,7 @@ package com.jbrigido.dev.view.customer.payment;
 import com.jbrigido.dev.components.AButton;
 import com.jbrigido.dev.components.AComboBox;
 import com.jbrigido.dev.components.ATextField;
+import com.jbrigido.dev.dto.MembershipTypeDTO;
 import com.jbrigido.dev.utilities.AdminColor;
 import org.jdesktop.swingx.JXFrame;
 import org.jdesktop.swingx.JXLabel;
@@ -13,13 +14,15 @@ import org.kordamp.ikonli.swing.FontIcon;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class CustomerPaymentView extends JXFrame {
-    private ATextField txtName, txtStart, txtEnd, txtPrice;
+    private ATextField txtName, txtPrice;
+    private ATextField txtStart, txtEnd;
     private JXLabel lblName, lblStart, lblEnd, lblPrice, lblMembership;
-    private AComboBox cbMembership;
+    private AComboBox<MembershipTypeDTO> cbMembership;
     private AButton btnSave;
-    private JXPanel pnlContainer,pnlContainerMain;
+    private JXPanel pnlContainer, pnlContainerMain;
 
     public CustomerPaymentView() {
         initComponents();
@@ -37,7 +40,7 @@ public class CustomerPaymentView extends JXFrame {
         this.lblEnd = new JXLabel(FontIcon.of(MaterialDesign.MDI_CALENDAR, 32, AdminColor.PRIMARY));
         this.lblPrice = new JXLabel(FontIcon.of(MaterialDesign.MDI_CASH, 32, AdminColor.PRIMARY));
         this.lblMembership = new JXLabel(FontIcon.of(MaterialDesign.MDI_ACCOUNT_KEY, 32, AdminColor.PRIMARY));
-        this.cbMembership = new AComboBox();
+        this.cbMembership = new AComboBox<>();
         this.btnSave = new AButton(FontIcon.of(MaterialDesignW.WALLET, 32, AdminColor.WHITE));
         this.pnlContainer = new JXPanel();
         this.pnlContainerMain = new JXPanel();
@@ -50,17 +53,17 @@ public class CustomerPaymentView extends JXFrame {
         pnlContainer.setLayout(new GridBagLayout());
         pnlContainer.setBackground(AdminColor.WHITE);
         add(pnlContainerMain);
+        disableComponents();
         buildForm();
         changeBackground();
-        addItem();
     }
 
-    private void addItem() {
-        cbMembership.addItem(new String("Hola"));
+    public void addItem(MembershipTypeDTO item) {
+        cbMembership.addItem(item);
     }
 
     private void buildForm() {
-        JXLabel lblTitle = new JXLabel("Paid menu");
+        JXLabel lblTitle = new JXLabel("Payment menu");
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lblTitle.setForeground(AdminColor.PRIMARY);
         add(lblTitle, BorderLayout.NORTH);
@@ -107,6 +110,7 @@ public class CustomerPaymentView extends JXFrame {
         txtEnd.setPreferredSize(fieldSize);
         txtPrice.setPreferredSize(fieldSize);
         btnSave.setPreferredSize(fieldSize);
+        txtPrice.setEditable(false);
     }
 
     private void changeBackground() {
@@ -115,4 +119,44 @@ public class CustomerPaymentView extends JXFrame {
             component.setBackground(AdminColor.WHITE);
         }
     }
+
+    public String getTxtStart() {
+        return txtStart.getText();
+    }
+
+    public String getTxtEnd() {
+        return txtEnd.getText();
+    }
+
+    public void setTxtEnd(String date) {
+        this.txtEnd.setText(date);
+    }
+
+    public void setTxtStart(String date) {
+        this.txtStart.setText(date);
+    }
+
+    public void setTxtPrice(String price) {
+        this.txtPrice.setText(price);
+    }
+
+    public void addEventCbx(ActionListener a) {
+        cbMembership.addActionListener(a);
+    }
+
+    public void setTxtName(String name) {
+        this.txtName.setText(name);
+    }
+
+    private void disableComponents() {
+        this.txtName.setEditable(false);
+        this.txtPrice.setEditable(false);
+        this.txtStart.setEditable(false);
+        this.txtEnd.setEditable(false);
+    }
+
+    public void addSaveEvent(ActionListener l) {
+        this.btnSave.addActionListener(l);
+    }
+
 }

@@ -1,19 +1,19 @@
 package com.jbrigido.dev.controller.auth;
 
 import com.jbrigido.dev.core.storage.local.LocalDB;
-import com.jbrigido.dev.dao.user.UserDB;
 import com.jbrigido.dev.dto.UserDTO;
+import com.jbrigido.dev.services.UserService;
 import com.jbrigido.dev.view.auth.Auth;
 import com.jbrigido.dev.view.main.MainView;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AuthController {
 
     private Auth view;
+    private UserService service;
 
     public AuthController() {
         view = new Auth();
@@ -32,7 +32,8 @@ public class AuthController {
     private void authenticate() {
         String username = view.getUsername();
         String password = String.copyValueOf(view.getPassword());
-        UserDTO userDTO = new UserDB(LocalDB.getInstance()).getUser(username, password);
+        service = new UserService(LocalDB.getInstance());
+        UserDTO userDTO = service.logIn(username, password);
         if (userDTO != null) {
             if (!userDTO.username().equals(username)) {
                 JOptionPane.showMessageDialog(null, "User not found");

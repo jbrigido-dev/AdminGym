@@ -1,17 +1,20 @@
 package com.jbrigido.dev.controller.formcustomer;
 
 import com.jbrigido.dev.core.storage.local.LocalDB;
-import com.jbrigido.dev.dao.customer.CustomerDB;
 import com.jbrigido.dev.dto.CustomerDTO;
+import com.jbrigido.dev.services.CustomerService;
 import com.jbrigido.dev.view.customer.add.CustomerAddView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 
 public class FormCustomerController {
 
     private CustomerAddView view;
+    private CustomerService service;
 
     public FormCustomerController() {
         this.view = new CustomerAddView();
@@ -29,7 +32,7 @@ public class FormCustomerController {
         String name = view.getForm().getTextCustomerName();
         String lastname = view.getForm().getTextCustomerLastName();
         String motherlastname = view.getForm().getTextCustomerMotherLastName();
-        Date date = view.getForm().getTextCustomerBirthday();
+        LocalDate date = view.getForm().getTextCustomerBirthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String address = view.getForm().getTextCustomerAddress();
         String phone = view.getForm().getTextCustomerPhone();
         String email = view.getForm().getTextCustomerEmail();
@@ -60,9 +63,9 @@ public class FormCustomerController {
         CustomerDTO customer = new CustomerDTO(0, name, lastname, motherlastname, phone, email, date, address, true);
         int res = JOptionPane.showConfirmDialog(null, "Save?");
         if (res == JOptionPane.YES_OPTION) {
-            new CustomerDB(LocalDB.getInstance()).save(customer);
+            service = new CustomerService(LocalDB.getInstance());
+            service.save(customer);
             JOptionPane.showMessageDialog(null, "Customer Created");
-
         }
 
     }

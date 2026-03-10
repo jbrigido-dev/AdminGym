@@ -2,9 +2,10 @@ package com.jbrigido.dev.controller.customer;
 
 import com.jbrigido.dev.controller.formcustomer.FormCustomerController;
 import com.jbrigido.dev.core.storage.local.LocalDB;
-import com.jbrigido.dev.dao.customer.CustomerDB;
 import com.jbrigido.dev.dto.CustomerDTO;
+import com.jbrigido.dev.services.CustomerService;
 import com.jbrigido.dev.view.customer.CustomerView;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,9 +15,11 @@ import java.util.Optional;
 public class CustomerController {
 
     private CustomerView view;
+    private CustomerService service;
 
     public CustomerController() {
         this.view = new CustomerView();
+        service = new CustomerService(LocalDB.getInstance());
         addEvents();
         loadData();
     }
@@ -28,7 +31,7 @@ public class CustomerController {
                 openWindowAdd();
             }
         });
-        view.setListenerTbl(new CustomerView.CustomerTableListener() {
+        view.setTableListener(new CustomerView.CustomerTableListener() {
             @Override
             public void onShow(int row) {
                 show(row);
@@ -42,6 +45,12 @@ public class CustomerController {
                 }
             }
         });
+        view.setFindAction(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadData();
+            }
+        });
     }
 
     private void openWindowAdd() {
@@ -49,7 +58,14 @@ public class CustomerController {
     }
 
     private void loadData() {
-        List<CustomerDTO> list = new CustomerDB(LocalDB.getInstance()).all();
+        view.resetTable();
+        String parameter = view.getTextSearchField();
+        List<CustomerDTO> list;
+        if (parameter.isEmpty()) {
+            list = service.getAll();
+        } else {
+            list = service.getByName(parameter);
+        }
         for (CustomerDTO c : list) {
             view.addData(c);
         }
@@ -57,7 +73,7 @@ public class CustomerController {
 
     private void show(int row) {
         long id = view.getCustomerIDat(row);
-        Optional<CustomerDTO> customer = new CustomerDB(LocalDB.getInstance()).getById(id);
+        Optional<CustomerDTO> customer = service.getById(id);
         if (customer.isPresent()) {
             CustomerDetailsController controller = new CustomerDetailsController(customer.get());
         }
@@ -65,7 +81,7 @@ public class CustomerController {
 
     private void delete(int row) {
         long id = view.getCustomerIDat(row);
-        new CustomerDB(LocalDB.getInstance()).delete(id);
+        service.remove(id);
         view.deleteRow(row);
     }
 

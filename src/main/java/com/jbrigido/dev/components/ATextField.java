@@ -12,12 +12,14 @@ public class ATextField extends JXTextField {
 
     public ATextField() {
         setOpaque(false);
+        setFont(new Font("Arial", Font.BOLD, 12));
         setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
     }
 
     public ATextField(String promptText) {
         super(promptText);
         setOpaque(false);
+        setFont(new Font("Arial", Font.BOLD, 12));
         setForeground(AdminColor.PRIMARY);
         setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
     }
@@ -26,6 +28,7 @@ public class ATextField extends JXTextField {
         super("", promptForeground);
         this.bgColor = bgColor;
         setOpaque(false);
+        setFont(new Font("Arial", Font.BOLD, 12));
         setForeground(AdminColor.PRIMARY);
         setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
     }
@@ -34,16 +37,9 @@ public class ATextField extends JXTextField {
         super(promptText, promptForeground);
         this.bgColor = bgColor;
         setOpaque(false);
+        setFont(new Font("Arial",Font.BOLD, 12));
         setForeground(AdminColor.PRIMARY);
         setBorder(BorderFactory.createEmptyBorder());
-    }
-
-    public Color getBgColor() {
-        return bgColor;
-    }
-
-    public void setBgColor(Color bgColor) {
-        this.bgColor = bgColor;
     }
 
     @Override

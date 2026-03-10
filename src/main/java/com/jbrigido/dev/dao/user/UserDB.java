@@ -1,6 +1,5 @@
 package com.jbrigido.dev.dao.user;
 
-import com.jbrigido.dev.core.storage.local.LocalDB;
 import com.jbrigido.dev.dto.UserDTO;
 
 import java.sql.Connection;
@@ -20,7 +19,6 @@ public class UserDB implements UserDAO {
     public UserDTO getUser(String username, String password) {
         String query = "Select username, password from users where username = (?) and password =(?)";
         UserDTO found = null;
-        connection = LocalDB.getInstance();
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, username);
             ps.setString(2, password);
