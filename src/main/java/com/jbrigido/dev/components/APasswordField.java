@@ -18,7 +18,7 @@ public class APasswordField extends JPasswordField {
         super(promptText);
         this.promptText = promptText;
         setOpaque(false);
-        setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         addFocusListener(new focusPasswordListener());
     }
 
@@ -29,7 +29,7 @@ public class APasswordField extends JPasswordField {
         this.bgColor = bgColor;
         setOpaque(false);
         setForeground(promptForeground);
-        setBorder(BorderFactory.createEmptyBorder());
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         addFocusListener(new focusPasswordListener());
     }
 
@@ -42,7 +42,6 @@ public class APasswordField extends JPasswordField {
         } else {
             g2.setPaint(bgColor);
         }
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
     }
 
     class focusPasswordListener implements FocusListener {

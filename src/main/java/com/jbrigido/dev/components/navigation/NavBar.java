@@ -20,7 +20,6 @@ public class NavBar extends JXPanel {
     }
 
     private void initComponents() {
-        this.setBackground(AdminColor.WHITE);
         FontIcon icon = FontIcon.of(MaterialDesign.MDI_HOME, 32, AdminColor.PRIMARY);
         ItemModel dashboard = new ItemModel("DASHBOARD", icon, ItemModel.ItemType.MENU);
         dashboardItem = new NavItem(dashboard, false);
@@ -60,6 +59,7 @@ public class NavBar extends JXPanel {
         repaint();
         revalidate();
     }
+
 
     public NavItem getDashboardItem() {
         return dashboardItem;

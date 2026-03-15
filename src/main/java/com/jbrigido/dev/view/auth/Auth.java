@@ -44,6 +44,12 @@ public class Auth extends JXFrame {
         add(pnlContent);
     }
 
+    public void setVisible(int w, int h) {
+        setSize(w, h);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
     public void addActionBtnLogin(ActionListener l) {
         btnLogin.addActionListener(l);
     }
