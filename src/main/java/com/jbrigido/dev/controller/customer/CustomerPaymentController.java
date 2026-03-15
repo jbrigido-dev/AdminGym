@@ -71,7 +71,6 @@ public class CustomerPaymentController {
         Optional<MembershipDTO> optional = new MembershipService(LocalDB.getInstance()).getLastMembership(customer.id());
         if (optional.isPresent()) {
             MembershipDTO retrieved = optional.get();
-            System.out.println(retrieved.endDate() + " " + getCurrentLocalDate());
             if (retrieved.endDate().isBefore(getCurrentLocalDate())) {
                 this.view.setTxtStart(getLocalDateFormatted(getCurrentLocalDate()));
             } else {
