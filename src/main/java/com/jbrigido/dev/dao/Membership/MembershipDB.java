@@ -80,7 +80,6 @@ public class MembershipDB implements MembershipDAO {
         String sql = "update memberships set status = 0 where id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setLong(1, id);
-            System.out.println(ps);
             ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException("Something was wrong! " + e);

@@ -13,7 +13,7 @@ public class ATextField extends JXTextField {
     public ATextField() {
         setOpaque(false);
         setFont(new Font("Arial", Font.BOLD, 12));
-        setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
     public ATextField(String promptText) {
@@ -21,7 +21,7 @@ public class ATextField extends JXTextField {
         setOpaque(false);
         setFont(new Font("Arial", Font.BOLD, 12));
         setForeground(AdminColor.PRIMARY);
-        setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
     public ATextField(Color promptForeground, Color bgColor) {
@@ -30,7 +30,7 @@ public class ATextField extends JXTextField {
         setOpaque(false);
         setFont(new Font("Arial", Font.BOLD, 12));
         setForeground(AdminColor.PRIMARY);
-        setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
     public ATextField(String promptText, Color promptForeground, Color bgColor) {
@@ -50,7 +50,6 @@ public class ATextField extends JXTextField {
         } else {
             g2.setPaint(bgColor);
         }
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
         super.paintComponent(g);
     }
 }

@@ -17,6 +17,7 @@ public class AuthController {
 
     public AuthController() {
         view = new Auth();
+        view.setVisible(500,300);
         addEvents();
     }
 

@@ -1,7 +1,11 @@
 package com.jbrigido.dev.services;
 
 import com.jbrigido.dev.dao.Membership.MembershipDB;
+import com.jbrigido.dev.dao.Membership.MembershipTypeDB;
+import com.jbrigido.dev.dao.transaction.TransactionDB;
 import com.jbrigido.dev.dto.MembershipDTO;
+import com.jbrigido.dev.dto.MembershipTypeDTO;
+import com.jbrigido.dev.dto.TransactionDTO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,26 +14,36 @@ import java.util.Optional;
 public class MembershipService {
 
     private Connection connection;
-    private MembershipDB dao;
+    private TransactionDB transactionDao;
+    private MembershipDB membershipDao;
+    private MembershipTypeDB membershipTypeDao;
 
     public MembershipService(Connection connection) {
         this.connection = connection;
-        this.dao = new MembershipDB(connection);
+        this.membershipDao = new MembershipDB(connection);
+        this.transactionDao = new TransactionDB(connection);
+        this.membershipTypeDao = new MembershipTypeDB(connection);
     }
 
     public Optional<MembershipDTO> getLastMembership(long id) {
-        return dao.getLastMembershipById(id);
+        return membershipDao.getLastMembershipById(id);
     }
 
     public void createMembership(MembershipDTO dto) {
         try {
             connection.setAutoCommit(false);
-            Optional<MembershipDTO> last = dao.getLastMembershipById(dto.customer_id());
+            Optional<MembershipTypeDTO> type = membershipTypeDao.getByID(dto.type());
+            Optional<MembershipDTO> last = membershipDao.getLastMembershipById(dto.customer_id());
             if (last.isPresent()) {
                 MembershipDTO retrieved = last.get();
-                dao.deactivateById(retrieved.id());
+                membershipDao.deactivateById(retrieved.id());
             }
-            dao.save(dto);
+            if (type.isPresent()) {
+                MembershipTypeDTO info = type.get();
+                TransactionDTO transaction = new TransactionDTO(info.description(), info.price(), 1, dto.customer_id());
+                transactionDao.save(transaction);
+                membershipDao.save(dto);
+            }
             connection.commit();
         } catch (SQLException e) {
             try {
