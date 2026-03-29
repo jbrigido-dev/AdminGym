@@ -39,7 +39,7 @@ public class AttendanceDB implements AttendanceDAO {
             while (rs.next()) {
                 list.add(new AttendanceDTO(
                         rs.getLong(1),
-                        rs.getTimestamp(2).toLocalDateTime().toLocalTime()
+                        rs.getTimestamp(2).toLocalDateTime()
                 ));
             }
         } catch (SQLException e) {

@@ -1,10 +1,11 @@
 package com.jbrigido.dev.dto;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public record AttendanceDTO(long id, long customerId, LocalTime localDate, long userId) {
+public record AttendanceDTO(long id, long customerId, LocalDateTime localDate, long userId) {
 
-    public AttendanceDTO(long customerId, LocalTime localDate) {
+    public AttendanceDTO(long customerId, LocalDateTime localDate) {
         this(0, customerId, localDate, 0);
 
     }

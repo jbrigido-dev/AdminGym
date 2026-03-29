@@ -1,6 +1,7 @@
 package com.jbrigido.dev.view.attendance;
 
 import com.jbrigido.dev.components.ASearcherField;
+import com.jbrigido.dev.dto.CustomerDTO;
 import com.jbrigido.dev.utilities.AdminColor;
 import org.jdesktop.swingx.JXLabel;
 import org.jdesktop.swingx.JXPanel;
@@ -37,11 +38,13 @@ public class AttendanceView extends JXPanel {
 
     private void buildWindow() {
         this.setBackground(AdminColor.WHITE);
+        this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         this.pnlHeader.setBackground(AdminColor.WHITE);
+        this.pnlHeader.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         this.setLayout(new BorderLayout());
         this.add(this.pnlHeader, BorderLayout.NORTH);
         this.pnlHeader.setLayout(new BorderLayout());
-        this.pnlHeader.add(this.lblTitle,BorderLayout.WEST);
+        this.pnlHeader.add(this.lblTitle, BorderLayout.WEST);
         this.pnlHeader.add(this.txtSearcher, BorderLayout.CENTER);
     }
 
@@ -68,7 +71,6 @@ public class AttendanceView extends JXPanel {
             }
         });
         JScrollPane tblPane = new JScrollPane(tblAttendance);
-        tblPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         tblPane.getViewport().setBackground(AdminColor.WHITE);
         tblPane.setBackground(AdminColor.WHITE);
         this.add(tblPane, BorderLayout.CENTER);
@@ -83,8 +85,8 @@ public class AttendanceView extends JXPanel {
         model.setRowCount(0);
     }
 
-    public void addElement(String name, LocalTime date, LocalDate endDate) {
-        model.addRow(new Object[]{name, date, endDate});
+    public void addElement(String[] data) {
+        model.addRow(new Object[]{data[0], data[1], data[2]});
     }
 
     public void addSearcherEvent(ActionListener l) {

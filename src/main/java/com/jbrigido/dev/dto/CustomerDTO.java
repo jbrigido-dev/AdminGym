@@ -8,4 +8,8 @@ public record CustomerDTO(long id, String name, String lastName, String motherNa
     public CustomerDTO(long id, String name, String lastName, String motherName, String phoneNumber, boolean status) {
         this(id, name, lastName, motherName, phoneNumber, "", null, "", status);
     }
+
+    public CustomerDTO(String name, String lastName, String motherName) {
+        this(0, name, lastName, motherName, "", "", null, "", false);
+    }
 }
