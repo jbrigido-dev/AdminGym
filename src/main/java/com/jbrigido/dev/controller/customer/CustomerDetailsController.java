@@ -5,6 +5,7 @@ import com.jbrigido.dev.dao.Membership.MembershipDB;
 import com.jbrigido.dev.dto.CustomerDTO;
 import com.jbrigido.dev.dto.MembershipDTO;
 import com.jbrigido.dev.services.CustomerService;
+import com.jbrigido.dev.utilities.LoaderUtil;
 import com.jbrigido.dev.view.customer.details.CustomerDetailsView;
 
 import javax.swing.*;
@@ -20,6 +21,8 @@ public class CustomerDetailsController {
     private CustomerDetailsView view;
     private CustomerDTO model;
     private CustomerService service;
+    private List<MembershipDTO> list;
+    private CustomerDTO request;
 
     public CustomerDetailsController(CustomerDTO model) {
         this.model = model;
@@ -39,10 +42,14 @@ public class CustomerDetailsController {
     }
 
     private void loadData() {
-        List<MembershipDTO> list = new MembershipDB(LocalDB.getInstance()).allById(model.id());
-        for (MembershipDTO dto : list) {
-            view.setItem(dto);
-        }
+        LoaderUtil.runWithLoader(view, () -> {
+            list = new MembershipDB(LocalDB.getInstance()).allById(model.id());
+        }, () -> {
+            for (MembershipDTO dto : list) {
+                view.setItem(dto);
+            }
+        });
+
     }
 
     private void setEvents() {
@@ -96,17 +103,19 @@ public class CustomerDetailsController {
             JOptionPane.showMessageDialog(null, "Enter a valid email");
             return;
         }
-        CustomerDTO request = new CustomerDTO(id, name, lastname, motherlastname, phone, email, date, address, true);
-        service.update(request);
-        JOptionPane.showMessageDialog(null, "Customer Updated");
+
+        LoaderUtil.runWithLoader(view, () -> {
+            request = new CustomerDTO(id, name, lastname, motherlastname, phone, email, date, address, true);
+        }, () -> {
+            service.update(request);
+            JOptionPane.showMessageDialog(null, "Customer Updated");
+        });
 
     }
-
 
     private boolean validateEmail(String email) {
         return email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     }
-
 
     private boolean validatePhone(String number) {
         return number.matches("^[0-9]{10}");
@@ -130,6 +139,5 @@ public class CustomerDetailsController {
         }
         return empty;
     }
-
 
 }

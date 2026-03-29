@@ -3,6 +3,7 @@ package com.jbrigido.dev.view.main;
 import com.jbrigido.dev.components.navigation.NavBar;
 import com.jbrigido.dev.controller.attendance.AttendanceController;
 import com.jbrigido.dev.controller.customer.CustomerController;
+import com.jbrigido.dev.controller.transaction.TransactionController;
 import org.jdesktop.swingx.JXFrame;
 import org.jdesktop.swingx.JXPanel;
 
@@ -16,6 +17,7 @@ public class MainView extends JXFrame {
     private JXPanel navBarContainer, pnlMain, pnlCards;
     private CustomerController customerController;
     private AttendanceController attendanceController;
+    private TransactionController transactionController;
 
     public MainView() {
         initComponents();
@@ -39,6 +41,7 @@ public class MainView extends JXFrame {
         this.navBarContainer.add(navBar, BorderLayout.CENTER);
         this.customerController = new CustomerController();
         this.attendanceController = new AttendanceController();
+        this.transactionController = new TransactionController();
         this.pnlMain.add(this.pnlCards, BorderLayout.CENTER);
         loadCard();
         addEvents();
@@ -49,11 +52,11 @@ public class MainView extends JXFrame {
         return Toolkit.getDefaultToolkit().getScreenSize();
     }
 
-
     private void loadCard() {
         this.pnlCards.setLayout(new CardLayout());
         this.pnlCards.add(customerController.getView(), navBar.getCustomerItem().getTitle());
         this.pnlCards.add(attendanceController.getView(), navBar.getAttendanceItem().getTitle());
+        this.pnlCards.add(transactionController.getView(), navBar.getTransactionItem().getTitle());
     }
 
     private void addEvents() {
@@ -111,7 +114,29 @@ public class MainView extends JXFrame {
 
             }
         });
-    }
+        navBar.getTransactionItem().addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent me) {
+                CardLayout cl = (CardLayout) pnlCards.getLayout();
+                cl.show(pnlCards, navBar.getTransactionItem().getTitle());
+            }
 
+            @Override
+            public void mousePressed(MouseEvent me) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent me) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent me) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent me) {
+            }
+        });
+    }
 
 }

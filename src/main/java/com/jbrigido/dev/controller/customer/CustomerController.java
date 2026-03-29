@@ -1,9 +1,11 @@
 package com.jbrigido.dev.controller.customer;
 
+import com.jbrigido.dev.components.ATable.CustomerTableListener;
 import com.jbrigido.dev.controller.formcustomer.FormCustomerController;
 import com.jbrigido.dev.core.storage.local.LocalDB;
 import com.jbrigido.dev.dto.CustomerDTO;
 import com.jbrigido.dev.services.CustomerService;
+import com.jbrigido.dev.utilities.LoaderUtil;
 import com.jbrigido.dev.view.customer.CustomerView;
 
 import javax.swing.*;
@@ -16,6 +18,8 @@ public class CustomerController {
 
     private CustomerView view;
     private CustomerService service;
+    private Optional<CustomerDTO> customer;
+    private List<CustomerDTO> list;
 
     public CustomerController() {
         this.view = new CustomerView();
@@ -31,7 +35,7 @@ public class CustomerController {
                 openWindowAdd();
             }
         });
-        view.setTableListener(new CustomerView.CustomerTableListener() {
+        view.setTableListener(new CustomerTableListener() {
             @Override
             public void onShow(int row) {
                 show(row);
@@ -58,36 +62,51 @@ public class CustomerController {
     }
 
     private void loadData() {
-        view.resetTable();
+       view.resetTable();
         String parameter = view.getTextSearchField();
-        List<CustomerDTO> list;
-        if (parameter.isEmpty()) {
-            list = service.getAll();
-        } else {
-            list = service.getByName(parameter);
-        }
-        for (CustomerDTO c : list) {
-            view.addData(c);
-        }
+        LoaderUtil.runWithLoader(getParent(), () -> {
+            if (parameter.isEmpty()) {
+                list = service.getAll();
+            } else {
+                list = service.getByName(parameter);
+            }
+        }, () -> {
+            for (CustomerDTO c : list) {
+                view.addData(c);
+            }
+        });
+
     }
 
     private void show(int row) {
-        long id = view.getCustomerIDat(row);
-        Optional<CustomerDTO> customer = service.getById(id);
-        if (customer.isPresent()) {
-            CustomerDetailsController controller = new CustomerDetailsController(customer.get());
-        }
+        LoaderUtil.runWithLoader(getParent(), () -> {
+            long id = view.getCustomerIDat(row);
+            customer = service.getById(id);
+        }, () -> {
+            if (customer.isPresent()) {
+                CustomerDetailsController controller = new CustomerDetailsController(customer.get());
+            }
+        });
+
     }
 
     private void delete(int row) {
+
         long id = view.getCustomerIDat(row);
-        service.remove(id);
-        view.deleteRow(row);
+        LoaderUtil.runWithLoader(getParent(), () -> {
+            service.remove(id);
+        }, () -> {
+            view.deleteRow(row);
+        });
+
     }
 
     public CustomerView getView() {
         return view;
     }
 
+    public JFrame getParent() {
+        return (JFrame) SwingUtilities.getWindowAncestor(view);
+    }
 
 }

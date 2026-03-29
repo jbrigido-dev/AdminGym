@@ -2,6 +2,7 @@ package com.jbrigido.dev.view.customer.details;
 
 import com.jbrigido.dev.components.AButton;
 import com.jbrigido.dev.components.AForm;
+import com.jbrigido.dev.components.ATable;
 import com.jbrigido.dev.dto.MembershipDTO;
 import com.jbrigido.dev.utilities.AdminColor;
 import org.jdesktop.swingx.*;
@@ -11,7 +12,6 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignP;
 import org.kordamp.ikonli.swing.FontIcon;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -23,7 +23,7 @@ public class CustomerDetailsView extends JXFrame {
     private JXPanel customerHistoryPanel, customerHeaderHistoryPanel, customerFooterHistoryPanel;
     private AButton btnSave;
     private AButton bntPay;
-    private JTable tblCustomers;
+    private ATable tblCustomers;
     private JXLabel lblHistory;
     private DefaultTableModel tblModel;
     private AForm form;
@@ -34,7 +34,6 @@ public class CustomerDetailsView extends JXFrame {
         buildTable();
         pack();
     }
-
 
     private void initComponents() {
         this.picture = new JXImagePanel();
@@ -49,7 +48,7 @@ public class CustomerDetailsView extends JXFrame {
         this.bntPay = new AButton("Pay", FontIcon.of(MaterialDesignC.CASH, 32, AdminColor.WHITE));
         this.form = new AForm();
         this.lblHistory = new JXLabel();
-        this.tblCustomers = new JXTable();
+        this.tblCustomers = new ATable();
     }
 
     private void buildWindow() {
@@ -64,12 +63,10 @@ public class CustomerDetailsView extends JXFrame {
         customerHistoryPanel.add(customerFooterHistoryPanel, BorderLayout.SOUTH);
         customerHistoryPanel.add(customerHeaderHistoryPanel, BorderLayout.NORTH);
         changeBackground();
-        tblCustomers.setDefaultRenderer(Object.class, new CustomerRender());
         buildHeaderHistoryPanel();
         buildFooterHistoryPanel();
         add(pnlContainer);
     }
-
 
     private void buildHeaderTable() {
         String[] headers = {"MEMBERSHIP", "START DATE", "END DATE", "STATUS"};
@@ -134,27 +131,6 @@ public class CustomerDetailsView extends JXFrame {
         customerFooterHistoryPanel.add(bntPay);
 
         customerFooterHistoryPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    }
-
-    class CustomerRender extends DefaultTableCellRenderer {
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JXPanel cell = new JXPanel();
-            cell.setLayout(new BorderLayout());
-            cell.setOpaque(true);
-            JXLabel lblicon = new JXLabel();
-            lblicon.setForeground(AdminColor.PRIMARY);
-            lblicon.setText(value == null ? "" : value.toString());
-            lblicon.setHorizontalAlignment(SwingConstants.CENTER);
-            cell.add(lblicon);
-            if (isSelected) {
-                cell.setBackground(AdminColor.PRIMARY_60);
-            } else {
-                cell.setBackground(AdminColor.WHITE);
-            }
-            return cell;
-        }
     }
 
     public void setTextToLblHistory(String text) {

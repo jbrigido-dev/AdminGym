@@ -6,10 +6,8 @@ import com.toedter.calendar.JDateChooser;
 import org.jdesktop.swingx.JXImagePanel;
 import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.JXTextField;
-
 import javax.swing.*;
 import java.awt.*;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class AForm extends JXPanel {

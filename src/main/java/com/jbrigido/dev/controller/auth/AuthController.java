@@ -3,6 +3,7 @@ package com.jbrigido.dev.controller.auth;
 import com.jbrigido.dev.core.storage.local.LocalDB;
 import com.jbrigido.dev.dto.UserDTO;
 import com.jbrigido.dev.services.UserService;
+import com.jbrigido.dev.utilities.LoaderUtil;
 import com.jbrigido.dev.view.auth.Auth;
 import com.jbrigido.dev.view.main.MainView;
 
@@ -14,10 +15,11 @@ public class AuthController {
 
     private Auth view;
     private UserService service;
+    private UserDTO userDTO;
 
     public AuthController() {
         view = new Auth();
-        view.setVisible(500,300);
+        view.setVisible(500, 300);
         addEvents();
     }
 
@@ -25,29 +27,20 @@ public class AuthController {
         this.view.addActionBtnLogin(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                authenticate();
+                view.setVisible(false);
+                LoaderUtil.runWithLoader(view, () -> {
+                    service = new UserService(LocalDB.getInstance());
+                    userDTO = service.logIn(view.getUsername(), String.copyValueOf(view.getPassword()));
+                }, () -> {
+                    if (userDTO != null) {
+                        openMain();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Credentials incorrect!");
+                        view.setVisible(true);
+                    }
+                });
             }
         });
-    }
-
-    private void authenticate() {
-        String username = view.getUsername();
-        String password = String.copyValueOf(view.getPassword());
-        service = new UserService(LocalDB.getInstance());
-        UserDTO userDTO = service.logIn(username, password);
-        if (userDTO != null) {
-            if (!userDTO.username().equals(username)) {
-                JOptionPane.showMessageDialog(null, "User not found");
-                return;
-            }
-            if (!userDTO.password().equals(password)) {
-                JOptionPane.showMessageDialog(null, "Password incorrect");
-                return;
-            }
-            openMain();
-        } else {
-            JOptionPane.showMessageDialog(null, "User not found");
-        }
     }
 
     private void openMain() {
